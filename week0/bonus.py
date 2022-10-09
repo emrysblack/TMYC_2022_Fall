@@ -5,14 +5,15 @@ class ShipComputer:
     def __init__(self, codes) -> None:
         self.codes = codes
         self._ptr = 0
+        self._quit = False
 
         # assign computer functions to codes
         self.optcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
                           5: self.__jump_if_true, 6: self.__jump_if_false, 
-                          7: self.__less_than, 8: self.__equal }
+                          7: self.__less_than, 8: self.__equal, 99: self.__quit }
     
     def execute(self):
-        while (self.codes[self._ptr] != 99): # 99 quit code
+        while not self._quit:
             self.optcodes[self.codes[self._ptr]%100]()
     
     # mode helper function
@@ -68,6 +69,9 @@ class ShipComputer:
 
         self.codes[out] = int(x == y)
         self._ptr += 4
+    
+    def __quit(self):
+        self._quit = True
  
 
 def part1():
