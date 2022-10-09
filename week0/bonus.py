@@ -4,70 +4,70 @@ DIAGNOSTIC = [3,225,1,225,6,6,1100,1,238,225,104,0,1002,43,69,224,101,-483,224,2
 class ShipComputer:
     def __init__(self, codes) -> None:
         self.codes = codes
-        self.ptr = 0
+        self._ptr = 0
 
         # assign computer functions to codes
-        self.optcodes = { 1: self.add, 2: self.mul, 3: self.prompt, 4: self.output, 
-                          5: self.jump_if_true, 6: self.jump_if_false, 
-                          7: self.less_than, 8: self.equal }
+        self.optcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
+                          5: self.__jump_if_true, 6: self.__jump_if_false, 
+                          7: self.__less_than, 8: self.__equal }
     
     def execute(self):
-        while (self.codes[self.ptr] != 99): # 99 quit code
-            self.optcodes[self.codes[self.ptr]%100]()
+        while (self.codes[self._ptr] != 99): # 99 quit code
+            self.optcodes[self.codes[self._ptr]%100]()
     
     # mode helper function
-    def get_args_with_mode(self, argc):
-        args = self.codes[self.ptr+1:self.ptr+argc+1] # get instruction
+    def __get_args_with_mode(self, argc):
+        args = self.codes[self._ptr+1:self._ptr+argc+1] # get instruction
         # mode
-        mode = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
+        mode = str(self.codes[self._ptr]).zfill(argc+2)[-3::-1]
         return list(map(lambda x, y: x if y == '1' else self.codes[x], args, mode))
 
     # computer functions 
-    def add(self):
-        x,y = self.get_args_with_mode(2)
-        out = self.codes[self.ptr + 3]
+    def __add(self):
+        x,y = self.__get_args_with_mode(2)
+        out = self.codes[self._ptr + 3]
 
         self.codes[out] = x + y
-        self.ptr += 4
+        self._ptr += 4
     
-    def mul(self):
-        x,y = self.get_args_with_mode(2)
-        out = self.codes[self.ptr + 3]
+    def __mul(self):
+        x,y = self.__get_args_with_mode(2)
+        out = self.codes[self._ptr + 3]
 
         self.codes[out] = x * y
-        self.ptr += 4
+        self._ptr += 4
     
-    def prompt(self):
-        out = self.codes[self.ptr+1]
+    def __prompt(self):
+        out = self.codes[self._ptr+1]
         self.codes[out] = int(input())
-        self.ptr += 2
+        self._ptr += 2
     
-    def output(self):
-        x, = self.get_args_with_mode(1)
+    def __output(self):
+        x, = self.__get_args_with_mode(1)
         print(x)
-        self.ptr += 2
+        self._ptr += 2
 
-    def jump_if_true(self):
-        x,y = self.get_args_with_mode(2)
-        self.ptr += y - self.ptr if x != 0 else 3
+    def __jump_if_true(self):
+        x,y = self.__get_args_with_mode(2)
+        self._ptr += y - self._ptr if x != 0 else 3
 
-    def jump_if_false(self):
-        x,y = self.get_args_with_mode(2)
-        self.ptr += y - self.ptr if x == 0 else 3
+    def __jump_if_false(self):
+        x,y = self.__get_args_with_mode(2)
+        self._ptr += y - self._ptr if x == 0 else 3
     
-    def less_than(self):
-        x,y = self.get_args_with_mode(2)
-        out = self.codes[self.ptr + 3]
+    def __less_than(self):
+        x,y = self.__get_args_with_mode(2)
+        out = self.codes[self._ptr + 3]
 
         self.codes[out] = int(x < y)
-        self.ptr += 4
+        self._ptr += 4
     
-    def equal(self):
-        x,y = self.get_args_with_mode(2)
-        out = self.codes[self.ptr + 3]
+    def __equal(self):
+        x,y = self.__get_args_with_mode(2)
+        out = self.codes[self._ptr + 3]
 
         self.codes[out] = int(x == y)
-        self.ptr += 4
+        self._ptr += 4
  
 
 def part1():
