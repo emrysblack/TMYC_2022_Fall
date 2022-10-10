@@ -1,7 +1,7 @@
 from unittest.mock import patch
 import unittest
 from io import StringIO
-from week0.bonus import ShipComputer
+from week1.bonus import ShipComputer
 
 
 class TestMath(unittest.TestCase):

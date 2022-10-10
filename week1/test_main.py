@@ -1,5 +1,5 @@
 import unittest
-from week0.main import execute_intcodes
+from week1.main import execute_intcodes
 
 class TestMath(unittest.TestCase):
     def test_add(self):
