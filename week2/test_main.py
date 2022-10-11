@@ -1,5 +1,5 @@
 import unittest
-from week2.main import trace_wire, find_crossings, get_distance_manhattan, get_intersection_steps
+from week2.main import trace_wire, find_crossings, get_distance_manhattan, get_steps
 
 class Test(unittest.TestCase):
     def test_trace_wire(self):
@@ -29,9 +29,9 @@ class Test(unittest.TestCase):
         self.assertEqual(get_distance_manhattan((0,-3)), 3)
     
     def test_steps(self):
-        self.assertEqual(sum(get_intersection_steps((2,2),[(0,0),(0,2),(2,2)])), 4)
-        self.assertEqual(sum(get_intersection_steps((2,2),[(0,0),(2,0),(2,4)])), 4)
-        self.assertEqual(sum(get_intersection_steps((0,-2),[(0,0),(4,0),(4,-2),(-4,-2)])), 10)
+        self.assertEqual(sum(get_steps((2,2),[(0,0),(0,2),(2,2)])), 4)
+        self.assertEqual(sum(get_steps((2,2),[(0,0),(2,0),(2,4)])), 4)
+        self.assertEqual(sum(get_steps((0,-2),[(0,0),(4,0),(4,-2),(-4,-2)])), 10)
 
 if __name__ == '__main__':
     unittest.main()

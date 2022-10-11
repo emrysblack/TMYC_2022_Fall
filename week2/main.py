@@ -18,7 +18,7 @@ def find_crossings(wire1, wire2):
     crossings = []
 
     # TODO: refactor into something cleaner and shorter
-    
+
     # much more complicated working with lines than points, but also much faster
     for i in range(len(wire1)-1):
         for j in range(len(wire2)-1):
@@ -60,7 +60,7 @@ def get_distance_manhattan(coord, origin=None):
     # get absolute distance
     return x[1] - x[0] + y[1] - y[0]
 
-def get_intersection_steps(intersection, wire):
+def get_steps(intersection, wire):
 
     # is point on the line?
     def contains(point, start, end):
@@ -93,7 +93,7 @@ def part2():
     wire2 = trace_wire(import_csv_flat('week2/wire2.csv'))
 
     crossings = find_crossings(wire1, wire2)
-    steps = [sum(get_intersection_steps(step, wire1)) + sum(get_intersection_steps(step, wire2)) for step in crossings]
+    steps = [sum(get_steps(step, wire1)) + sum(get_steps(step, wire2)) for step in crossings]
     steps.sort()
 
     return steps[0]
