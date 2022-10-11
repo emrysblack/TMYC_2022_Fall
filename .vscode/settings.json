@@ -2,6 +2,9 @@
     "python.terminal.activateEnvironment": true,
     "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
     "terminal.integrated.inheritEnv": false,
+    "terminal.integrated.env.windows":{
+        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder}"
+    },
     "python.testing.unittestArgs": [
         "-v",
         "-s",
