@@ -29,9 +29,9 @@ class Test(unittest.TestCase):
         self.assertEqual(get_distance_manhattan((0,-3)), 3)
     
     def test_steps(self):
-        self.assertEqual(get_intersection_steps((2,2),[(0,0),(0,2),(2,2)],[(0,0),(2,0),(2,2)]), 8)
-        self.assertEqual(get_intersection_steps((2,2),[(0,0),(0,2),(4,2)],[(0,0),(2,0),(2,4)]), 8)
-        self.assertEqual(get_intersection_steps((0,-2),[(0,0),(4,0),(4,-2),(-4,-2)],[(0,0),(0,-2),]), 12)
+        self.assertEqual(sum(get_intersection_steps((2,2),[(0,0),(0,2),(2,2)])), 4)
+        self.assertEqual(sum(get_intersection_steps((2,2),[(0,0),(2,0),(2,4)])), 4)
+        self.assertEqual(sum(get_intersection_steps((0,-2),[(0,0),(4,0),(4,-2),(-4,-2)])), 10)
 
 if __name__ == '__main__':
     unittest.main()

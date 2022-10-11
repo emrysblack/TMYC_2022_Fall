@@ -17,6 +17,8 @@ def trace_wire(path):
 def find_crossings(wire1, wire2):
     crossings = []
 
+    # TODO: refactor into something cleaner and shorter
+    
     # much more complicated working with lines than points, but also much faster
     for i in range(len(wire1)-1):
         for j in range(len(wire2)-1):
@@ -58,7 +60,7 @@ def get_distance_manhattan(coord, origin=None):
     # get absolute distance
     return x[1] - x[0] + y[1] - y[0]
 
-def get_intersection_steps(intersection, wire1, wire2):
+def get_intersection_steps(intersection, wire):
 
     # is point on the line?
     def contains(point, start, end):
@@ -70,23 +72,13 @@ def get_intersection_steps(intersection, wire1, wire2):
             return point[0] == start[0] and point[1] >= y[0] and point[1] <= y[1]
         return point[1] == start[1] and point[0] >= x[0] and point[0] <= x[1]
     
-    steps = 0
-
-    # steps from wire1
-    for i in range(len(wire1)-1):
-        if contains(intersection, wire1[i], wire1[i+1]):
-            steps += get_distance_manhattan(intersection, wire1[i])
-            break
-        steps += get_distance_manhattan(wire1[i], wire1[i+1])
+    i = 0
+    while not contains(intersection, wire[i], wire[i+1]):
+       yield get_distance_manhattan(wire[i], wire[i+1])
+       i += 1
     
-    # steps from wire2
-    for i in range(len(wire2)-1):
-        if contains(intersection, wire2[i], wire2[i+1]):
-            steps += get_distance_manhattan(intersection, wire2[i])
-            break
-        steps += get_distance_manhattan(wire2[i], wire2[i+1])
+    yield get_distance_manhattan(intersection, wire[i])
 
-    return steps
 
 def part1():
     wire1 = trace_wire(import_csv_flat('week2/wire1.csv'))
@@ -101,7 +93,7 @@ def part2():
     wire2 = trace_wire(import_csv_flat('week2/wire2.csv'))
 
     crossings = find_crossings(wire1, wire2)
-    steps = [get_intersection_steps(step, wire1, wire2) for step in crossings]
+    steps = [sum(get_intersection_steps(step, wire1)) + sum(get_intersection_steps(step, wire2)) for step in crossings]
     steps.sort()
 
     return steps[0]
