@@ -1,5 +1,7 @@
 from utils.csv_reader import import_csv_flat
-
+"""
+For simplicity and readability we could use SymPy, but it's just way too slow for this application
+"""
 
 def trace_wire(path):
     coordinates = [(0,0)]
@@ -17,33 +19,28 @@ def trace_wire(path):
 def find_crossings(wire1, wire2):
     crossings = []
 
-    # TODO: refactor into something cleaner and shorter
-    # Could use SymPy to make stuff simpler, but it's just too slow for this application
-
     # much more complicated working with lines than points, but also much faster
     for i in range(len(wire1)-1):
         for j in range(len(wire2)-1):
+            
+            is_vertical = wire1[i][0] == wire1[i+1][0] # first line vertical?
+
             # find low, mid, high points
-            if wire1[i][0] == wire1[i+1][0]: # first line vertical
-                mid1 = wire1[i][0]
-                low_high1 = [wire2[j][0], wire2[j+1][0]]
-                low_high1.sort()
-                mid2 = wire2[j][1]
-                low_high2 = [wire1[i][1], wire1[i+1][1]]
-                low_high2.sort()
-                if (mid1 >= low_high1[0] and mid1 <= low_high1[1] and
-                    mid2 >= low_high2[0] and mid2 <= low_high2[1]):
-                    crossings.append((mid1,mid2))
-            else: # first line horizontal
-                mid1 = wire1[i][1]
-                low_high1 = [wire2[j][1], wire2[j+1][1]]
-                low_high1.sort()
-                mid2 = wire2[j][0]
-                low_high2 = [wire1[i][0], wire1[i+1][0]]
-                low_high2.sort()
-                if (mid1 >= low_high1[0] and mid1 <= low_high1[1] and
-                    mid2 >= low_high2[0] and mid2 <= low_high2[1]):
-                    crossings.append((mid2,mid1))
+            mid1 = wire1[i][int(not is_vertical)]
+            low_high1 = [wire2[j][int(not is_vertical)], wire2[j+1][int(not is_vertical)]]
+            
+            # find low, mid, high points
+            mid2 = wire2[j][int(is_vertical)]
+            low_high2 = [wire1[i][int(is_vertical)], wire1[i+1][int(is_vertical)]]
+            
+            low_high1.sort(), low_high2.sort()
+            low1, high1 = low_high1
+            low2, high2 = low_high2
+
+            # does midpoint intersect
+            if (mid1 >= low1 and mid1 <= high1 and
+                mid2 >= low2 and mid2 <= high2):
+                crossings.append((mid1,mid2) if is_vertical else (mid2,mid1))
 
     return crossings[1:]
 
@@ -55,8 +52,7 @@ def get_distance_manhattan(coord, origin=None):
     x,y = ([origin[0],coord[0]],[origin[1],coord[1]])
 
     # reorder for max/min
-    x.sort()
-    y.sort()
+    x.sort(), y.sort()
 
     # get absolute distance
     return x[1] - x[0] + y[1] - y[0]
@@ -67,8 +63,7 @@ def get_steps(intersection, wire):
     def contains(point, start, end):
         x = [start[0], end[0]]
         y = [start[1], end[1]]
-        x.sort()
-        y.sort()
+        x.sort(), y.sort()
         if start[0] == end[0]:
             return point[0] == start[0] and point[1] >= y[0] and point[1] <= y[1]
         return point[1] == start[1] and point[0] >= x[0] and point[0] <= x[1]
