@@ -18,6 +18,7 @@ def find_crossings(wire1, wire2):
     crossings = []
 
     # TODO: refactor into something cleaner and shorter
+    # Could use SymPy to make stuff simpler, but it's just too slow for this application
 
     # much more complicated working with lines than points, but also much faster
     for i in range(len(wire1)-1):
