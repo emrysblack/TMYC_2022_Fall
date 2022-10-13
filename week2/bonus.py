@@ -5,7 +5,6 @@ from itertools import permutations
 
 
 class Amplifier():
-    
     def __init__(self, data, phase_setting):
         self.program = ShipComputer(data)
         self.output = []
@@ -24,7 +23,7 @@ class Amplifier():
                     self.output.append(int(input))
                     self.program._quit = True
         
-        # overide input and print in orignal program so we can capture values
+        # overide input and print in original program so we can capture values
         with patch('builtins.input', lambda:self.inputs.pop(0)), patch('sys.stdout', PauseOutput):
             self.program._quit = False
             self.program.execute()
