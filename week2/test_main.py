@@ -1,5 +1,5 @@
 import unittest
-from week2.main import trace_wire, find_crossings, get_distance_manhattan, get_steps
+from week2.main import trace_wire, find_crossings, get_steps
 
 class Test(unittest.TestCase):
     def test_trace_wire(self):
@@ -20,13 +20,6 @@ class Test(unittest.TestCase):
         self.assertEqual(find_crossings([(0,0),(0,3)],[(0,0),(4,0),(4,2),(1,2)]), [])
         # parallel
         self.assertEqual(find_crossings([(0,0),(0,3)],[(0,0),(1,0),(1,4)]), [])
-    
-
-    def test_distance(self):
-        self.assertEqual(get_distance_manhattan((3,3)), 6)
-        self.assertEqual(get_distance_manhattan((-3,3)), 6)
-        self.assertEqual(get_distance_manhattan((-3,-3)), 6)
-        self.assertEqual(get_distance_manhattan((0,-3)), 3)
     
     def test_steps(self):
         self.assertEqual(sum(get_steps((2,2),[(0,0),(0,2),(2,2)])), 4)
