@@ -30,6 +30,7 @@ class Amplifier():
         
         return self.output[-1]
 
+    @property
     def done(self):
         # is program done or paused
         return self.program.codes[self.program._ptr] == 99
@@ -42,7 +43,7 @@ def run_amplifiers(data, phase_settings):
     amplifiers[0].inputs.append(0)
 
     # keep going until last amplifier has finished
-    while not amplifiers[-1].done():
+    while not amplifiers[-1].done:
         for i in range(len(amplifiers)):
             # pipe amplifier outout into next amplifier
             amplifiers[(i+1) % len(amplifiers)].inputs.append(amplifiers[i].run())
