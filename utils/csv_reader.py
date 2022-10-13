@@ -8,7 +8,7 @@ def import_csv_flat(file_path):
         return [item for line in csvFile for item in line]
 
 def main():
-    print(import_csv_flat("test.csv"))
+    print(import_csv_flat("utils/test.csv"))
 
 if __name__ == "__main__":
     main()
