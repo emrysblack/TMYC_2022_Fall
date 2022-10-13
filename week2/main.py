@@ -22,7 +22,7 @@ def find_crossings(wire1, wire2):
 
     for i in range(len(wire1)-1):
         for j in range(len(wire2)-1):
-            if intersection := Math.intersects((wire1[i], wire1[i+1]),(wire2[j], wire2[j+1])):
+            if intersection := Math.intersects(tuple(wire1[i:i+2]),tuple(wire2[j:j+2])):
                 crossings.append(intersection)
     
     return crossings[1:] # exclude intersection at origin
@@ -30,8 +30,8 @@ def find_crossings(wire1, wire2):
 
 def get_steps(intersection, points):    
     i = 0
-    while not Math.contains((points[i], points[i+1]), intersection):
-       yield Math.get_distance_manhattan(points[i], points[i+1])
+    while not Math.contains(tuple(points[i:i+2]), intersection):
+       yield Math.get_distance_manhattan(*points[i:i+2])
        i += 1
     
     yield Math.get_distance_manhattan(points[i], intersection)
