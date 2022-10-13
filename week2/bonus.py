@@ -50,18 +50,9 @@ def run_amplifiers(data, phase_settings):
     # final amplifier output        
     return amplifiers[-1].output[-1]
 
-def bonus1():
+def bonus(phase_range):
     data = [int(x) for x in import_csv_flat("week2/bonus.csv")]
-    phase_settings = list(permutations(range(0, 5)))
-    max_thrust = 0
-    for phase in phase_settings:
-        if (thrust := run_amplifiers(data,list(phase))) > max_thrust:
-            max_thrust = thrust
-    return max_thrust
-
-def bonus2():
-    data = [int(x) for x in import_csv_flat("week2/bonus.csv")]
-    phase_settings = list(permutations(range(5, 10)))
+    phase_settings = list(permutations(phase_range))
     max_thrust = 0
     for phase in phase_settings:
         if (thrust := run_amplifiers(data,list(phase))) > max_thrust:
@@ -69,8 +60,8 @@ def bonus2():
     return max_thrust
 
 def main():
-    print("bonus 1: ", bonus1())
-    print("bonus 2: ", bonus2())
+    print("bonus 1: ", bonus(range(0, 5)))
+    print("bonus 2: ", bonus(range(5, 10)))
 
 if __name__ == "__main__":
     main()
