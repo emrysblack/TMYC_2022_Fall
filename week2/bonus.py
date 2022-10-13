@@ -13,18 +13,17 @@ class Amplifier():
     def run(self):
         """
         runs Santas Computer and pauses execution on output.
-        a bit hacky to use test methods and an inner class, 
+        a bit hacky to use test methods, 
         but we don't want to modify the original computer out of spec
         """
-        class PauseOutput():
-            def write(x):
-                if input := x.strip():
-                    # get print value and pause program
-                    self.output.append(int(input))
-                    self.program._quit = True
-        
+        def output_pause(x):
+            if input := x.strip():
+                # get print value and pause program
+                self.output.append(int(input))
+                self.program._quit = True
+
         # overide input and print in original program so we can capture values
-        with patch('builtins.input', lambda:self.inputs.pop(0)), patch('sys.stdout', PauseOutput):
+        with patch('builtins.input', lambda:self.inputs.pop(0)), patch('sys.stdout.write', output_pause):
             self.program._quit = False
             self.program.execute()
         
