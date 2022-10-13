@@ -17,15 +17,15 @@ def trace_wire(path):
     return coordinates
 
 
-def find_crossings(wire1, wire2):
-    crossings = []
-
+def get_crossings(wire1, wire2):
     for i in range(len(wire1)-1):
         for j in range(len(wire2)-1):
-            if intersection := Math.intersects(tuple(wire1[i:i+2]),tuple(wire2[j:j+2])):
-                crossings.append(intersection)
-    
-    return crossings[1:] # exclude intersection at origin
+            line1, line2 = tuple(wire1[i:i+2]), tuple(wire2[j:j+2])
+            if line1[0] == (0,0) and line2[0] == (0,0):
+                continue # exclude origin
+            if intersection := Math.intersects(line1, line2):
+                yield intersection
+
 
 
 def get_steps(intersection, points):    
@@ -41,7 +41,7 @@ def part1():
     wire1 = trace_wire(read_csv('week2/wire1.csv'))
     wire2 = trace_wire(read_csv('week2/wire2.csv'))
 
-    crossings = find_crossings(wire1, wire2)
+    crossings = list(get_crossings(wire1, wire2))
     crossings.sort(key=lambda x: Math.get_distance_manhattan(x))
 
     return Math.get_distance_manhattan(crossings[0])
@@ -51,8 +51,7 @@ def part2():
     wire1 = trace_wire(read_csv('week2/wire1.csv'))
     wire2 = trace_wire(read_csv('week2/wire2.csv'))
 
-    crossings = find_crossings(wire1, wire2)
-    steps = [sum(get_steps(x, wire1)) + sum(get_steps(x, wire2)) for x in crossings]
+    steps = [sum(get_steps(x, wire1)) + sum(get_steps(x, wire2)) for x in get_crossings(wire1, wire2)]
     steps.sort()
 
     return steps[0]

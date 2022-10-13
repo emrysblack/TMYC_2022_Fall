@@ -1,5 +1,5 @@
 import unittest
-from week2.main import trace_wire, find_crossings, get_steps
+from week2.main import trace_wire, get_crossings, get_steps
 
 class Test(unittest.TestCase):
     def test_trace_wire(self):
@@ -13,13 +13,13 @@ class Test(unittest.TestCase):
     
     def test_find_crossings(self):
         # cross
-        self.assertEqual(find_crossings([(0,0),(0,3)],[(0,0),(-1,0),(-1,2),(4,2)]), [(0,2)])
+        self.assertEqual(list(get_crossings([(0,0),(0,3)],[(0,0),(-1,0),(-1,2),(4,2)])), [(0,2)])
         # touch
-        self.assertEqual(find_crossings([(0,0),(3,0)],[(0,0),(0,4),(2,4),(2,0)]), [(2,0)])
+        self.assertEqual(list(get_crossings([(0,0),(3,0)],[(0,0),(0,4),(2,4),(2,0)])), [(2,0)])
         # not touch
-        self.assertEqual(find_crossings([(0,0),(0,3)],[(0,0),(4,0),(4,2),(1,2)]), [])
+        self.assertEqual(list(get_crossings([(0,0),(0,3)],[(0,0),(4,0),(4,2),(1,2)])), [])
         # parallel
-        self.assertEqual(find_crossings([(0,0),(0,3)],[(0,0),(1,0),(1,4)]), [])
+        self.assertEqual(list(get_crossings([(0,0),(0,3)],[(0,0),(1,0),(1,4)])), [])
     
     def test_steps(self):
         self.assertEqual(sum(get_steps((2,2),[(0,0),(0,2),(2,2)])), 4)
