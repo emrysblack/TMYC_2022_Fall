@@ -16,14 +16,13 @@ class Amplifier():
         a bit hacky to use test methods, 
         but we don't want to modify the original computer out of spec
         """
-        def output_pause(x):
-            if input := x.strip():
-                # get print value and pause program
-                self.output.append(int(input))
-                self.program._quit = True
+        def output_pause(input):
+            # get print value and pause program
+            self.output.append(input)
+            self.program._quit = True
 
         # overide input and print in original program so we can capture values
-        with patch('builtins.input', lambda:self.inputs.pop(0)), patch('sys.stdout.write', output_pause):
+        with patch('builtins.input', lambda:self.inputs.pop(0)), patch('builtins.print', output_pause):
             self.program._quit = False
             self.program.execute()
         
