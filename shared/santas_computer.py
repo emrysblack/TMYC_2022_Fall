@@ -14,29 +14,35 @@ class ShipComputer:
             self._optcodes[self.codes[self.ptr]%100]()
 
 
-    # mode helper function
-    def __get_args(self, moded = 0, normal = 0):
+    # helper functions
+    def __get_args(self, argc):
         # mode flags
-        mode = str(self.codes[self.ptr]).zfill(moded+2)[-3::-1]
-        m = self.codes[self.ptr+1:self.ptr+moded+1] # get moded arguments
-        n = self.codes[self.ptr+moded+1:self.ptr+moded+normal+1] # get non-moded arguments
-        self.ptr += moded + normal + 1 # increment pointer over args
-        args = list(map(lambda x, y: x if y == '1' else self.codes[x], m, mode))
-        args.extend(n)
-        return args
+        mode = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
+        args = self.codes[self.ptr+1:self.ptr+argc+1] # get moded arguments
+        self.ptr += argc + 1 # increment pointer over args
+        return list(map(lambda x, y: x if y == '1' else self.codes[x], args, mode))
+    
+    def __assign(self, value):
+        out = self.codes[self.ptr]
+        self.codes[out] = value
+        self.ptr += 1
+    
+    def __input(self):
+        self.ptr += 1
+        return int(input())
 
     # computer functions 
     def __add(self):
-        x,y,out = self.__get_args(2,1)
-        self.codes[out] = x + y
+        x,y = self.__get_args(2)
+        self.__assign(x+y)
 
     def __mul(self):
-        x,y,out = self.__get_args(2,1)
-        self.codes[out] = x * y
+        x,y = self.__get_args(2)
+        self.__assign(x*y)
 
     def __prompt(self):
-        out, = self.__get_args(normal=1)
-        self.codes[out] = int(input())
+        x = self.__input()
+        self.__assign(x)
     
     def __output(self):
         x, = self.__get_args(1)
@@ -51,13 +57,12 @@ class ShipComputer:
         if x == 0: self.ptr = y
     
     def __less_than(self):
-        x,y,out = self.__get_args(2,1)
-        self.codes[out] = int(x < y)
+        x,y = self.__get_args(2)
+        self.__assign(int(x < y))
 
     def __equal(self):
-        x,y,out = self.__get_args(2,1)
-        self.codes[out] = int(x == y)
+        x,y = self.__get_args(2)
+        self.__assign(int(x == y))
     
     def __quit(self):
         self.quit = True
- 
