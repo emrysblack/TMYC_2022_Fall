@@ -5,13 +5,13 @@ class ShipComputer:
         self._quit = False
 
         # assign computer functions to codes
-        self.optcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
+        self._optcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
                           5: self.__jump_if_true, 6: self.__jump_if_false, 
                           7: self.__less_than, 8: self.__equal, 99: self.__quit }
     
     def execute(self):
         while not self._quit:
-            self.optcodes[self.codes[self._ptr]%100]()
+            self._optcodes[self.codes[self._ptr]%100]()
     
     # mode helper function
     def __get_args_with_mode(self, argc):
