@@ -17,11 +17,11 @@ class Amplifier():
         def output_pause(input):
             # get print value and pause program
             self.output.append(input)
-            self.program._quit = True
+            self.program.quit = True
 
         # overide input and print in original program so we can capture values
         with patch('builtins.input', lambda:self.inputs.pop(0)), patch('builtins.print', output_pause):
-            self.program._quit = False
+            self.program.quit = False
             self.program.execute()
         
         return self.output[-1]
@@ -29,4 +29,4 @@ class Amplifier():
     @property
     def done(self):
         # is program done or paused
-        return self.program.codes[self.program._ptr] == 99
+        return (ptr := self.program.ptr) > -1 and self.program.codes[ptr] == 99
