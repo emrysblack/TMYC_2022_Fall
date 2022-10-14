@@ -17,10 +17,10 @@ class ShipComputer:
     # helper functions
     def __get_args(self, argc):
         # mode flags
-        mode = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
+        modes = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
         args = self.codes[self.ptr+1:self.ptr+argc+1] # get moded arguments
         self.ptr += argc + 1 # increment pointer over args
-        return list(map(lambda x, y: x if y == '1' else self.codes[x], args, mode))
+        return list(map(lambda arg, mode: arg if bool(int(mode)) else self.codes[arg], args, modes))
     
     def __assign(self, value):
         out = self.codes[self.ptr]
