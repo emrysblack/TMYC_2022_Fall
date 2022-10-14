@@ -1,4 +1,4 @@
-from shared.csv_reader import import_csv_flat as read_csv
+from shared.csv_reader import read_flat as read_csv
 from shared.math import RightAngleMath as Math # we could use SymPy, but it's too slow here
 
 
