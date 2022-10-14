@@ -5,13 +5,13 @@ class ShipComputer:
         self.quit = False
 
         # assign computer functions to codes
-        self._optcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
+        self._opcodes = { 1: self.__add, 2: self.__mul, 3: self.__prompt, 4: self.__output, 
                           5: self.__jump_if_true, 6: self.__jump_if_false, 
                           7: self.__less_than, 8: self.__equal, 99: self.__quit }
     
     def execute(self):
         while not self.quit:
-            self._optcodes[self.codes[self.ptr]%100]()
+            self._opcodes[self.codes[self.ptr]%100]()
 
 
     # helper functions
