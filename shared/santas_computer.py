@@ -26,9 +26,9 @@ class ShipComputer:
 
     # mode helper function
     def __get_args_with_mode(self, argc):
-        args = self.codes[self.ptr+1:self.ptr+argc+1] # get instruction
         # mode
         mode = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
+        args = self.codes[self.ptr+1:self.ptr+argc+1] # get arguments
         self.ptr += argc # increment pointer over args
         return list(map(lambda x, y: x if y == '1' else self.codes[x], args, mode))
 
