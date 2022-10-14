@@ -29,4 +29,4 @@ class Amplifier():
     @property
     def done(self):
         # is program done or paused
-        return (ptr := self.program.ptr) > -1 and self.program.codes[ptr] == 99
+        return self.program.codes[self.program.ptr] == 99

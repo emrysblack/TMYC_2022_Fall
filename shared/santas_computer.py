@@ -1,7 +1,7 @@
 class ShipComputer:
     def __init__(self, codes) -> None:
         self.codes = codes
-        self.ptr = -1 # not started
+        self.ptr = 0
         self.quit = False
 
         # assign computer functions to codes
@@ -11,62 +11,51 @@ class ShipComputer:
     
     def execute(self):
         while not self.quit:
-            self._optcodes[self.codes[self.__ptr]%100]()
-    
-    @property
-    def __ptr(self):
-        """
-        increments program pointer like ++
-        so functions are always in sync with program
-        when dealing with arguments
-        """
-        self.ptr += 1
-        return self.ptr 
+            self._optcodes[self.codes[self.ptr]%100]()
 
 
     # mode helper function
-    def __get_args_with_mode(self, argc):
-        # mode
-        mode = str(self.codes[self.ptr]).zfill(argc+2)[-3::-1]
-        args = self.codes[self.ptr+1:self.ptr+argc+1] # get arguments
-        self.ptr += argc # increment pointer over args
-        return list(map(lambda x, y: x if y == '1' else self.codes[x], args, mode))
+    def __get_args(self, moded = 0, normal = 0):
+        # mode flags
+        mode = str(self.codes[self.ptr]).zfill(moded+2)[-3::-1]
+        m = self.codes[self.ptr+1:self.ptr+moded+1] # get moded arguments
+        n = self.codes[self.ptr+moded+1:self.ptr+moded+normal+1] # get non-moded arguments
+        self.ptr += moded + normal + 1 # increment pointer over args
+        args = list(map(lambda x, y: x if y == '1' else self.codes[x], m, mode))
+        args.extend(n)
+        return args
 
     # computer functions 
     def __add(self):
-        x,y = self.__get_args_with_mode(2)
-        out = self.codes[self.__ptr]
+        x,y,out = self.__get_args(2,1)
         self.codes[out] = x + y
 
     def __mul(self):
-        x,y = self.__get_args_with_mode(2)
-        out = self.codes[self.__ptr]
+        x,y,out = self.__get_args(2,1)
         self.codes[out] = x * y
 
     def __prompt(self):
-        out = self.codes[self.__ptr]
+        out, = self.__get_args(normal=1)
         self.codes[out] = int(input())
     
     def __output(self):
-        x, = self.__get_args_with_mode(1)
+        x, = self.__get_args(1)
         print(x)
 
     def __jump_if_true(self):
-        x,y = self.__get_args_with_mode(2)
-        if x != 0: self.ptr = y - 1
+        x,y = self.__get_args(2)
+        if x != 0: self.ptr = y
 
     def __jump_if_false(self):
-        x,y = self.__get_args_with_mode(2)
-        if x == 0: self.ptr = y - 1 
+        x,y = self.__get_args(2)
+        if x == 0: self.ptr = y
     
     def __less_than(self):
-        x,y = self.__get_args_with_mode(2)
-        out = self.codes[self.__ptr]
+        x,y,out = self.__get_args(2,1)
         self.codes[out] = int(x < y)
 
     def __equal(self):
-        x,y = self.__get_args_with_mode(2)
-        out = self.codes[self.__ptr]
+        x,y,out = self.__get_args(2,1)
         self.codes[out] = int(x == y)
     
     def __quit(self):
