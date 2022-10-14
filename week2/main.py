@@ -1,5 +1,5 @@
-from utils.csv_reader import import_csv_flat as read_csv
-from utils.math import RightAngleMath as Math # we could use SymPy, but it's too slow here
+from shared.csv_reader import import_csv_flat as read_csv
+from shared.math import RightAngleMath as Math # we could use SymPy, but it's too slow here
 
 
 def trace_wire(path):

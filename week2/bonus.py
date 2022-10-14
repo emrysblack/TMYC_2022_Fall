@@ -1,4 +1,4 @@
-from utils.csv_reader import import_csv_flat
+from shared.csv_reader import import_csv_flat
 from week1.bonus import ShipComputer
 from unittest.mock import patch
 from itertools import permutations

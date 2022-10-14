@@ -1,5 +1,5 @@
 import unittest
-from utils.math import RightAngleMath
+from shared.math import RightAngleMath
 
 class TestRightAngleMath(unittest.TestCase):
     def test_intersects(self):
