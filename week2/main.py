@@ -52,9 +52,8 @@ def part2():
     wire2 = trace_wire(read_csv('week2/wire2.csv'))
 
     steps = [sum(get_steps(x, wire1)) + sum(get_steps(x, wire2)) for x in get_crossings(wire1, wire2)]
-    steps.sort()
 
-    return steps[0]
+    return min(steps)
 
 
 def main():
