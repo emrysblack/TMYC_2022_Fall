@@ -23,8 +23,8 @@ class Image():
         # define terminal color values for display
         colors = {'0': "\033[40m \033[0m", '1': "\033[47m \033[0m", '2': " "}
         # print image
-        for index in range(0, self._dimensions, self.width):
-            row = self._pixels[index:index + self.width]
+        for i in range(0, self._dimensions, self.width):
+            row = self._pixels[i:i + self.width]
             print(''.join([colors[pixel] for pixel in row]))
     
     def __get_display_data(self):
