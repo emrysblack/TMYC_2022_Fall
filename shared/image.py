@@ -31,5 +31,8 @@ class Image():
         """
         flattens layered data into a single display layer
         """
-        # get first non-transparent pixel for each position
-        self._pixels = [next(filter(lambda x: x != "2", self._data[i::self._dimensions]),"2") for i in range(self._dimensions)]
+        self._pixels = [
+            # get first non-transparent pixel for each position
+            next(filter(lambda x: x != "2", self._data[i::self._dimensions]),"2") 
+            for i in range(self._dimensions)
+        ]
