@@ -9,9 +9,8 @@ class Image():
         if len(data) % self._dimensions != 0:
             raise ValueError(f'Could not load image data to dimensions {self.width} x {self.height}')
         
-        self._data = data
         self._layers = int(len(data) / self._dimensions)
-        self.__get_display_data()
+        self._pixels = self.__get_display_data(data)
         return self
     
     def load_from_file(self, path):
@@ -27,12 +26,12 @@ class Image():
             row = self._pixels[i:i + self.width]
             print(''.join([colors[pixel] for pixel in row]))
     
-    def __get_display_data(self):
+    def __get_display_data(self, data):
         """
         flattens layered data into a single display layer
         """
-        self._pixels = [
+        return [
             # get first non-transparent pixel for each position
-            next(filter(lambda x: x != "2", self._data[i::self._dimensions]),"2") 
+            next(filter(lambda x: x != "2", data[i::self._dimensions]),"2") 
             for i in range(self._dimensions)
         ]
