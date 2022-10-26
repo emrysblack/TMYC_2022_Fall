@@ -8,7 +8,7 @@ def read_flat(file_path):
         return [item for line in csvFile for item in line]
 
 def main():
-    print(read_flat("utils/test.csv"))
+    print(read_flat("shared/test.csv"))
 
 if __name__ == "__main__":
     main()
