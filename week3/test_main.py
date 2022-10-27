@@ -1,25 +1,36 @@
 import unittest
-from week3.main import is_possible, is_possible_with_double
+from week3.main import check, six_digits, increasing, has_duplicates, has_double
 
-class TestPart1(unittest.TestCase):
+class Test(unittest.TestCase):
+    def testSixDigits(self):
+        self.assertTrue(check("111111", six_digits))
+        self.assertFalse(check("223", six_digits))
+    
+    def testIncreasing(self):
+        self.assertTrue(check("1123", increasing))
+        self.assertFalse(check("2230", increasing))
+    
+    def testHasDuplicates(self):
+        self.assertTrue(check("111", has_duplicates))
+        self.assertFalse(check("123", has_duplicates))
+    
+    def testHasDouble(self):
+        self.assertTrue(check("112", has_double))
+        self.assertFalse(check("123", has_double))
+        self.assertFalse(check("111", has_double))
+
     def testValid(self):
-        self.assertTrue(is_possible(111111))
+        self.assertTrue(check("111111", six_digits, increasing, has_duplicates))
+        self.assertTrue(check("112233", six_digits, increasing, has_double))
+        self.assertTrue(check("111122", six_digits, increasing, has_double))
 
     def testInvalid(self):
-        self.assertFalse(is_possible(223450))
-        self.assertFalse(is_possible(123789))
-
-class TestPart2(unittest.TestCase):
-    def testValid(self):
-        self.assertTrue(is_possible_with_double(112233))
-        self.assertTrue(is_possible_with_double(111122))
-
-    def testInvalid(self):
-        self.assertFalse(is_possible_with_double(111111))
-        self.assertFalse(is_possible_with_double(123444))
-        self.assertFalse(is_possible_with_double(223450))
-        self.assertFalse(is_possible_with_double(123789))
-
+        self.assertFalse(check("223450", six_digits, increasing, has_duplicates))
+        self.assertFalse(check("123789", six_digits, increasing, has_duplicates))
+        self.assertFalse(check("111111", six_digits, increasing, has_double))
+        self.assertFalse(check("123444", six_digits, increasing, has_double))
+        self.assertFalse(check("223450", six_digits, increasing, has_double))
+        self.assertFalse(check("123789", six_digits, increasing, has_double))
 
 if __name__ == '__main__':
     unittest.main()
