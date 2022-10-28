@@ -41,8 +41,7 @@ def part1():
     wire1 = trace_wire(read_csv('week2/wire1.csv'))
     wire2 = trace_wire(read_csv('week2/wire2.csv'))
 
-    crossings = list(get_crossings(wire1, wire2))
-    crossings.sort(key=lambda x: Math.get_distance_manhattan(x))
+    crossings = sorted(list(get_crossings(wire1, wire2)), key=lambda x: Math.get_distance_manhattan(x))
 
     return Math.get_distance_manhattan(crossings[0])
 

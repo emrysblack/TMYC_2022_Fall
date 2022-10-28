@@ -12,6 +12,7 @@ class Asteroids():
         self.get_coordinates = lambda i: (i % self.width, int(i / self.width))
         self.valid_coord = lambda x,y: y >= 0 and x >= 0 and x < self.width and self.get_index(x,y) < self.width * self.height
 
+    @staticmethod
     def _get_slope(a,b):
             x,y = b[0] - a[0], b[1] - a[1]
             div = gcd(x,y)
@@ -19,6 +20,7 @@ class Asteroids():
             y /= div
             return (int(x), int(y))
     
+    @staticmethod
     def _angle_between(p1, p2):
         ang1 = atan2(*p1[::-1])
         ang2 = atan2(*p2[::-1])
@@ -71,8 +73,7 @@ class Asteroids():
         asteroid_positions = self.asteroid_positions.copy()
 
         # keep shooting until all asteroids have been destroyed
-        while len(visible := self.get_visibility(asteroid_positions.copy(), outpost)):
-            visible.sort(key=target_asteroids) # get lock-on asteroids
+        while len(visible := sorted(self.get_visibility(asteroid_positions.copy(), outpost), key=target_asteroids)):
             for rock in visible: # destroy asteroids
                 asteroid_positions.remove(self.get_index(*rock))
             destroyed.extend(visible)
