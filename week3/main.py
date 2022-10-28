@@ -1,20 +1,16 @@
 """
 composable password check rules
 """
-def six_digits(possible: str) -> bool:
+def six_digits(possible: str) -> bool: # six digits long
     return len(possible) == 6
 
-def increasing(possible: str) -> bool:
-    # no digits decreasing from left to right
-    expected = list(possible)
-    expected.sort()
-    expected = ''.join(expected)
-    return possible == expected
+def increasing(possible: str) -> bool: # no digits decreasing from left to right
+    return possible == ''.join(sorted(possible))
 
-def has_duplicates(possible: str) -> bool:
+def has_duplicates(possible: str) -> bool: # has a repeating value
     return len(set(possible)) < len(possible)
 
-def has_double(possible: str) -> bool:
+def has_double(possible: str) -> bool: # has exactly 2 of a value
     return 2 in [possible.count(i) for i in set(possible)]
 
 def check(possible: str, *rules) -> bool:
