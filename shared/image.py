@@ -9,7 +9,6 @@ class Image():
         if len(data) % self._dimensions != 0:
             raise ValueError(f'Could not load image data to dimensions {self.width} x {self.height}')
         
-        self._layers = int(len(data) / self._dimensions)
         self._pixels = self.__get_display_data(data)
         return self
     
