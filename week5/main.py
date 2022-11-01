@@ -12,18 +12,18 @@ def get_common_ancestor(a,b,data):
     # find closest ancestor
     return [x for x,y in zip(a_path,b_path) if x == y][-1]
 
-def get_orbits(key, data):
+def get_orbital_distance(key, data):
     return len(list(get_ancestors(key,data))) - 1 # root has no orbits
 
 
 def part1(data):
-    return sum(get_orbits(orbit, data) for orbit in data)
+    return sum(get_orbital_distance(orbit, data) for orbit in data)
 
 def part2(data):
     # get parent and ancestor distances
-    you = get_orbits(data["YOU"], data)
-    santa = get_orbits(data["SAN"], data)
-    ancestor = get_orbits(get_common_ancestor("YOU","SAN", data), data)
+    you = get_orbital_distance(data["YOU"], data)
+    santa = get_orbital_distance(data["SAN"], data)
+    ancestor = get_orbital_distance(get_common_ancestor("YOU","SAN", data), data)
     # adjust distance to ancestor
     distance = you - ancestor + santa - ancestor
     return distance

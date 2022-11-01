@@ -1,12 +1,12 @@
 import unittest
-from week5.main import read_orbit_file, get_orbits, get_common_ancestor
+from week5.main import read_orbit_file, get_orbital_distance, get_common_ancestor
 
 class Test(unittest.TestCase):
     def testOrbits(self):
         data = read_orbit_file("week5/test_part1.txt")
-        self.assertEqual(get_orbits("D", data), 3)
-        self.assertEqual(get_orbits("L", data), 7)
-        self.assertEqual(sum(get_orbits(orbit, data) for orbit in data), 42)
+        self.assertEqual(get_orbital_distance("D", data), 3)
+        self.assertEqual(get_orbital_distance("L", data), 7)
+        self.assertEqual(sum(get_orbital_distance(orbit, data) for orbit in data), 42)
     
     def testAncestors(self):
         data = read_orbit_file("week5/test_part2.txt")
