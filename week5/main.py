@@ -5,37 +5,33 @@ def get_ancestors(x, data):
     yield x
 
 def get_common_ancestor(a,b,data):
-    # make ancestor maps
-    a_map = [x for x in get_ancestors(a,data)][::-1]
-    b_map = [x for x in get_ancestors(b,data)][::-1]
+    # get ancestor paths
+    a_path = reversed(list(get_ancestors(a,data)))
+    b_path = reversed(list(get_ancestors(b,data)))
 
     # find closest ancestor
-    return [x for x,y in zip(a_map,b_map) if x == y][-1]
+    return [x for x,y in zip(a_path,b_path) if x == y][-1]
 
-def get_orbits(key, data, total = 0):
-    if key not in data:
-        return total
-    return get_orbits(data[key], data, total + 1)
-    
+def get_orbits(key, data):
+    return len(list(get_ancestors(key,data))) - 1 # root has no orbits
+
 
 def part1(data):
     return sum(get_orbits(orbit, data) for orbit in data)
 
 def part2(data):
-    # get ancestor distance
+    # get parent and ancestor distances
+    you = get_orbits(data["YOU"], data)
+    santa = get_orbits(data["SAN"], data)
     ancestor = get_orbits(get_common_ancestor("YOU","SAN", data), data)
-    # get distance of parents
-    distance = (get_orbits(data["YOU"], data) - ancestor) + (get_orbits(data["SAN"], data) - ancestor)
+    # adjust distance to ancestor
+    distance = you - ancestor + santa - ancestor
     return distance
 
 def read_orbit_file(path):
     # read in orbits
-    data = {}
     with open(path, mode ='r') as file:
-        for line in file.readlines():
-            rock, orbits = line.strip().split(")")
-            data[orbits] = rock
-    return data
+        return {orbits:rock for rock,orbits in (line.strip().split(")") for line in file.readlines())}
 
 def main():
     data = read_orbit_file("week5/orbits.txt")    
