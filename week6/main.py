@@ -73,14 +73,20 @@ class Orbits:
         return gravity
     
     def _step_velocities(self) -> None:
+        """
+        computes moons velocities based on gravtitational pull between moons
+        """
         for index, moon_a in enumerate(self.moons):
             for moon_b in self.moons: # modify velocity by gravity pull between moons
                 self.vel[index] = list(map(sum, zip(self.vel[index], self.get_gravity(moon_a,moon_b))))
 
     def _step_positions(self) -> None:
+        """
+        updates moon positions based on current moon velocity
+        """
         for i, (moon, speed) in enumerate(zip(self.moons,self.vel)):
-            for j, (p,s) in enumerate(zip(moon, speed)):
-                self.moons[i][j] = p + s
+            for j, (position,velocity) in enumerate(zip(moon, speed)):
+                self.moons[i][j] = position + velocity
     
     def step(self, steps=1):
         for _ in range(steps):
@@ -89,6 +95,9 @@ class Orbits:
 
 
 def part1(path: str):
+    """
+    computes total energy in an orbital system after 1000 cycles
+    """
     orbits = Orbits(path)
     orbits.step(1000)
 
@@ -97,6 +106,9 @@ def part1(path: str):
     return energy
 
 def part2(path: str):
+    """
+    computes number of cycles before a reset on an orbital system
+    """
     orbits = Orbits(path)
     orbital_loops = orbits.orbital_loops
 
