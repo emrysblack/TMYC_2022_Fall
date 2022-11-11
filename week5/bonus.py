@@ -43,7 +43,7 @@ class FlawedFrequencyTransmission():
         for i in range(len(self.data) - 2, len(self._adds) - 1, -1):
             self.data[i] = (self.data[i] + self.data[i+1]) % 10 # last digit
 
-    def step(self, steps:int) -> str:
+    def step(self, steps:int=1) -> str:
         for _ in range(steps):
             self._run_phase()
         
