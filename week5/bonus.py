@@ -1,19 +1,13 @@
-from typing import Union
-
-# class var types
-signal = Union[list[int],str]
-summation = list[list[range]]
-
 class FlawedFrequencyTransmission():
-    def __init__(self, data: signal, repeat=1, shift=None) -> None:
-        self._adds: summation = []
-        self._subs: summation = []
-        self.data = self.__load_file(data) * repeat if isinstance(data, str) else data * repeat
-        shift = int(''.join(map(str,self.data[:shift]))) if shift else 0
+    def __init__(self, data: str, repeat=1) -> None:
+        self._adds: list[list[range]] = []
+        self._subs: list[list[range]] = []
+        self.data = (self.__load_file(data) if not data.isdigit() else [int(x) for x in data]) * repeat
+        shift = int(''.join(map(str,self.data[:7]))) if repeat > 1 else 0
         
         self._get_phase_transforms(shift)
 
-    def __load_file(self, path) -> list[int]:
+    def __load_file(self, path: str) -> list[int]:
         with open(path, mode ='r') as file:
             return [int(x) for x in file.read()]
     
@@ -55,7 +49,7 @@ def bonus1():
     return fft.step(100)
 
 def bonus2():
-    fft = FlawedFrequencyTransmission("week5/bonus.txt", repeat=10_000, shift=7)
+    fft = FlawedFrequencyTransmission("week5/bonus.txt", repeat=10_000)
     return fft.step(100)
 
 def main():  
