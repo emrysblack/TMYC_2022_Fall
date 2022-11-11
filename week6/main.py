@@ -1,78 +1,113 @@
 import re
 from functools import reduce
 from math import gcd
-from itertools import count
+import copy
+
+# complex type
+positionList = tuple[tuple[int],tuple[int],tuple[int]]
+
+class Orbits:
+    def __init__(self, path) -> None:
+         self._read_orbit_file(path)
+         self.vel = [[0,0,0]] * len(self.moons)
+    
+    def _read_orbit_file(self, path):
+        # read in orbits
+        with open(path, mode ='r') as file:
+            # grab numbers in order from line
+            self.moons = [list(map(int, re.findall("-?\\d+", s))) for s in file.readlines()]
+    
+    @property
+    def potential(self):
+        return [sum(map(lambda item: abs(item), x)) for x in self.moons]
+    
+    @property
+    def kinetic(self):
+        return [sum(map(lambda item: abs(item), x)) for x in self.vel]
+
+    @property
+    def _positions(self) -> positionList:
+        """
+        rearranges moon positions grouped by x,y,z coordinates
+        """
+        return tuple(tuple(self.moons[j][i] for j in range(len(self.moons))) for i in range(3))
+    
+    @property
+    def orbital_loops(self):
+        """
+        returns orbital loop periods for x,y,z of current system
+        restores state afterward so can be used without side-effects
+        """
+        # save current state
+        moons = copy.deepcopy(self.moons)
+        vel = copy.deepcopy(self.vel)
+        # save starting positions to track orbits
+        init_x, init_y, init_z = self._positions
+        loops = {'x':0,'y':0,'z':0}
+
+        i = 1
+        while 0 in loops.values(): # go until we have found all position loops
+            self.step()
+            
+            # see which positions have looped
+            x,y,z = self._positions
+            if not loops['x'] and x == init_x: loops['x'] = i + 1
+            if not loops['y'] and y == init_y: loops['y'] = i + 1
+            if not loops['z'] and z == init_z: loops['z'] = i + 1
+            i+=1
+        
+        # restore state
+        self.moons = moons
+        self.vel = vel
+
+        return loops.values()
+        
+    @staticmethod
+    def get_gravity(moon_a: list[int], moon_b: list[int]) -> list[int]:
+        """
+        computes x,y,z pulls between two moons
+        """
+        gravity = [0,0,0]
+        for index, (a,b) in enumerate(zip(moon_a, moon_b)):
+            if a != b: gravity[index] += 1 if a < b else -1
+        return gravity
+    
+    def _step_velocities(self) -> None:
+        for index, moon_a in enumerate(self.moons):
+            for moon_b in self.moons:
+                self.vel[index] = list(map(sum, zip(self.vel[index], self.get_gravity(moon_a,moon_b))))
+
+    def _step_positions(self) -> None:
+        for i, (moon, speed) in enumerate(zip(self.moons,self.vel)):
+            for j, (p,s) in enumerate(zip(moon, speed)):
+                self.moons[i][j] = p + s
+    
+    def step(self, steps=1):
+        for _ in range(steps):
+            self._step_velocities()
+            self._step_positions()
 
 
-def get_positions(moons: list[list[int]]) -> tuple[tuple[int],tuple[int],tuple[int]]:
-    """
-    rearranges moon positions grouped by x,y,z coordinates
-    """
-    return tuple(tuple(moons[j][i] for j in range(len(moons))) for i in range(3))
+def part1(path: str):
+    orbits = Orbits(path)
+    orbits.step(1000)
 
-def get_gravity(moon_a: list[int], moon_b: list[int]) -> list[int]:
-    """
-    computes x,y,z pulls between two moons
-    """
-    gravity = [0,0,0]
-    for index, (a,b) in enumerate(zip(moon_a, moon_b)):
-        if a != b: gravity[index] += 1 if a < b else -1
-    return gravity
-
-def step_velocities(moons: list[list[int]], velocities: list[list[int]]) -> None:
-    for index, moon_a in enumerate(moons):
-        for moon_b in moons:
-            velocities[index] = list(map(sum, zip(velocities[index], get_gravity(moon_a,moon_b))))
-
-def step_positions(moons: list[list[int]], velocities: list[list[int]]) -> None:
-    for i, (moon, speed) in enumerate(zip(moons,velocities)):
-        for j, (p,s) in enumerate(zip(moon, speed)):
-            moons[i][j] = p + s
-
-def part1(moons: list[list[int]]):
-    velocities = [[0,0,0]] * len(moons)
-    for _ in range(1000):
-        step_velocities(moons, velocities)
-        step_positions(moons, velocities)
-
-    pot = [sum(map(lambda item: abs(item), x)) for x in moons]
-    kin = [sum(map(lambda item: abs(item), x)) for x in velocities]
-
-    energy = sum(map(lambda x: x[0]*x[1], zip(pot,kin)))
+    energy = sum(map(lambda x: x[0]*x[1], zip(orbits.potential,orbits.kinetic)))
 
     return energy
 
-def part2(moons: list[list[int]]):
-    # save starting positions to track orbits
-    init_x, init_y, init_z = get_positions(moons)
-    loops = {'x':0,'y':0,'z':0}
-    velocities = [[0,0,0]] * len(moons)
+def part2(path: str):
+    orbits = Orbits(path)
+    orbital_loops = orbits.orbital_loops
 
-    for i in count(1):
-        step_velocities(moons, velocities)
-        step_positions(moons, velocities)
-        
-        # see which positions have looped
-        x,y,z = get_positions(moons)
-        if not loops['x'] and x == init_x: loops['x'] = i + 1
-        if not loops['y'] and y == init_y: loops['y'] = i + 1
-        if not loops['z'] and z == init_z: loops['z'] = i + 1
-        
-        # go until we have found all position loops
-        if 0 not in loops.values(): 
-            # we need the least common multiple of the 3 loops so we know when
-            # the positions will all loop at the same time
-            return reduce(lambda x,y: int(abs(x*y) / gcd(x,y)), loops.values())
-
-def read_orbit_file(path):
-    # read in orbits
-    with open(path, mode ='r') as file:
-        # grab numbers in order from line
-        return [list(map(int, re.findall("-?\\d+", s))) for s in file.readlines()]
+    # we need the least common multiple of the 3 loops so we know when
+    # the positions will all loop at the same time
+    return reduce(lambda x,y: int(abs(x*y) / gcd(x,y)), orbital_loops)
 
 def main():
-    print("part 1: ", part1(read_orbit_file("week6/test_orbits.txt")))
-    print("part 2: ", part2(read_orbit_file("week6/test_orbits.txt")))
+    moons_file = "week6/test_orbits.txt"
+    print("part 1: ", part1(moons_file))
+    print("part 2: ", part2(moons_file))
 
 if __name__ == "__main__":
     main()
