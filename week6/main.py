@@ -117,7 +117,7 @@ def part2(path: str):
     return reduce(lambda x,y: int(abs(x*y) / gcd(x,y)), orbital_loops)
 
 def main():
-    moons_file = "week6/test_orbits.txt"
+    moons_file = "week6/orbits.txt"
     print("part 1: ", part1(moons_file))
     print("part 2: ", part2(moons_file))
 
