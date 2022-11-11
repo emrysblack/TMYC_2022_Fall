@@ -29,8 +29,8 @@ class FlawedFrequencyTransmission():
     def _run_phase(self) -> None:
         # first half of signal
         for i, (adds, subs) in enumerate(zip(self._adds,self._subs)):
-            add = sum(map(lambda x: sum(map(lambda y: self.data[y], x)), adds))
-            sub = sum(map(lambda x: sum(map(lambda y: self.data[y], x)), subs))
+            add = sum(sum(map(lambda idx: self.data[idx], x)) for x in adds)
+            sub = sum(sum(map(lambda idx: self.data[idx], x)) for x in subs)
             self.data[i] = int(str(add - sub)[-1]) # last digit without sign
             
         # second half of signal
