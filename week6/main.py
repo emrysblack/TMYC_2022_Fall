@@ -11,18 +11,18 @@ class Orbits:
          self._read_orbit_file(path)
          self.vel = [[0,0,0]] * len(self.moons)
     
-    def _read_orbit_file(self, path):
+    def _read_orbit_file(self, path) -> None:
         # read in orbits
         with open(path, mode ='r') as file:
             # grab numbers in order from line
             self.moons = [list(map(int, re.findall("-?\\d+", s))) for s in file.readlines()]
     
     @property
-    def potential(self):
+    def potential_energy(self) -> list[int]:
         return [sum(map(lambda item: abs(item), x)) for x in self.moons]
     
     @property
-    def kinetic(self):
+    def kinetic_energy(self) -> list[int]:
         return [sum(map(lambda item: abs(item), x)) for x in self.vel]
 
     @property
@@ -65,7 +65,7 @@ class Orbits:
     @staticmethod
     def get_gravity(moon_a: list[int], moon_b: list[int]) -> list[int]:
         """
-        computes x,y,z pulls between two moons
+        computes x,y,z pull between two moons
         """
         gravity = [0,0,0]
         for index, (a,b) in enumerate(zip(moon_a, moon_b)):
@@ -74,7 +74,7 @@ class Orbits:
     
     def _step_velocities(self) -> None:
         for index, moon_a in enumerate(self.moons):
-            for moon_b in self.moons:
+            for moon_b in self.moons: # modify velocity by gravity pull between moons
                 self.vel[index] = list(map(sum, zip(self.vel[index], self.get_gravity(moon_a,moon_b))))
 
     def _step_positions(self) -> None:
@@ -92,7 +92,7 @@ def part1(path: str):
     orbits = Orbits(path)
     orbits.step(1000)
 
-    energy = sum(map(lambda x: x[0]*x[1], zip(orbits.potential,orbits.kinetic)))
+    energy = sum(map(lambda x: x[0]*x[1], zip(orbits.potential_energy,orbits.kinetic_energy)))
 
     return energy
 
